@@ -1552,7 +1552,29 @@
       }
     });
 
+    // Responsive scaling
+    function handleResize() {
+      const deck = document.querySelector('.deck-wrapper');
+      // Available width/height minus padding and navigation bar
+      const availableWidth = window.innerWidth - 48;
+      const availableHeight = window.innerHeight - 100;
+      
+      const targetWidth = 1280;
+      const targetHeight = 720;
+      
+      const scale = Math.min(
+        availableWidth / targetWidth,
+        availableHeight / targetHeight
+      );
+      
+      // Scale down if window is smaller than presentation, otherwise keep at 1
+      deck.style.transform = `scale(${Math.min(scale, 1)})`;
+    }
+
+    window.addEventListener('resize', handleResize);
+    
     // Initialize
+    handleResize();
     updateSlides();
   </script>
 
