@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de IA Lead Scoring",
+    "output": "lead_scoring_ai_match_workflow.html",
+    "animation": "trace",
+    "visual_preset": "classic",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    { "id": "client_space", "label": "Client Space" },
+    { "id": "avva", "label": "AVVA" },
+    { "id": "ceipal", "label": "CEIPAL" },
+    { "id": "fabric", "label": "Fabric (Data)" },
+    { "id": "ls_data", "label": "Lead Scoring (Data)" },
+    { "id": "ls_ai", "label": "Lead Scoring (AI)" }
+  ],
+  "mainPath": [
+    "req_created",
+    "avva_transform",
+    "ceipal_vacancy",
+    "fabric_sync",
+    "ls_filters",
+    "ls_ai_match",
+    "ceipal_tag"
+  ],
+  "nodes": [
+    { "id": "req_created", "lane": "client_space", "col": 0, "width": 120, "type": "frontend", "label": "Crear Requisición", "sublabel": "En Client Space" },
+    { "id": "avva_transform", "lane": "avva", "col": 1, "width": 120, "type": "backend", "label": "Transformar JD", "sublabel": "Info estructurada" },
+    { "id": "ceipal_vacancy", "lane": "ceipal", "col": 2, "width": 120, "type": "backend", "label": "Crear Vacante", "sublabel": "Con JD corregido" },
+    { "id": "fabric_sync", "lane": "fabric", "col": 3, "width": 120, "type": "database", "label": "Obtener Jobs", "sublabel": "Fabric (3x / día)" },
+    { "id": "ls_fetch_candidates", "lane": "ls_data", "col": 3, "width": 240, "type": "database", "label": "Obtener Candidatos", "sublabel": "No Submitted, No Ban y No Hired" },
+    { "id": "ls_filters", "lane": "ls_data", "col": 4, "width": 130, "type": "backend", "label": "Aplicar Filtros", "sublabel": "Vacante sobre pool" },
+    { "id": "ls_ai_match", "lane": "ls_ai", "col": 4, "width": 120, "type": "cloud", "label": "AI Match Score", "sublabel": "Asignar puntaje" },
+    { "id": "ceipal_tag", "lane": "ceipal", "col": 5, "width": 140, "type": "backend", "label": "Auto Tagging", "sublabel": "Candidatos alto score" }
+  ],
+  "edges": [
+    { "from": "req_created", "to": "avva_transform" },
+    { "from": "avva_transform", "to": "ceipal_vacancy" },
+    { "from": "ceipal_vacancy", "to": "fabric_sync" },
+    { "from": "fabric_sync", "to": "ls_filters" },
+    { "from": "ls_fetch_candidates", "to": "ls_filters", "role": "branch", "route": "auto" },
+    { "from": "ls_filters", "to": "ls_ai_match" },
+    { "from": "ls_ai_match", "to": "ceipal_tag" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Criterios de Elegibilidad", "items": ["Los candidatos pasan al AI Match sólo si cumplen: No Submitted, No Ban y No Hired."] },
+    { "dot": "emerald", "title": "Sincronización de Vacantes", "items": ["Lead Scoring obtiene los nuevos Jobs generados en CEIPAL leyendo directamente desde las tablas en Fabric (Data) 3 veces al día."] },
+    { "dot": "violet", "title": "Automatización End-to-End", "items": ["Desde la creación de la Requisición en Client Space hasta el auto-tagging en CEIPAL, el proceso orquesta los sistemas en tiempo real y sin intervención manual."] }
+  ]
+}

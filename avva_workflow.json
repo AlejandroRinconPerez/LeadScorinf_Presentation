@@ -1,0 +1,221 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de Trabajo de AVVA",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "flujo_completo",
+        "label": "Flujo Completo E2E",
+        "focus": [
+          "recruitment_ats",
+          "job_service",
+          "azure_openai",
+          "evaluation_dto",
+          "postgres_db",
+          "output_response"
+        ],
+        "note": "Paso a paso desde la ingesta de la vacante hasta su entrega certificada."
+      },
+      {
+        "id": "auditoria_ia",
+        "label": "Auditoría IA",
+        "focus": [
+          "master_prompt",
+          "azure_openai",
+          "user_message",
+          "evaluation_dto"
+        ],
+        "note": "Análisis del texto crudo contra el Master Prompt y generación estructurada."
+      },
+      {
+        "id": "persistencia_trazabilidad",
+        "label": "Trazabilidad y Salida",
+        "focus": [
+          "evaluation_dto",
+          "postgres_db",
+          "output_response"
+        ],
+        "note": "Guardado en PostgreSQL y retorno de approved: YES para publicación."
+      }
+    ],
+    "output": "avva_workflow.html"
+  },
+  "lanes": [
+    { "id": "ingesta", "label": "Plataforma Reclutamiento / ATS" },
+    { "id": "backend", "label": "Servicio Backend .NET (C#)" },
+    { "id": "ia", "label": "Motor de Inteligencia Artificial" },
+    { "id": "data", "label": "Persistencia y Base de Datos" }
+  ],
+  "phases": [
+    { "id": "intake_phase", "label": "1. Ingesta y Recepción", "fromCol": 0, "toCol": 1 },
+    { "id": "audit_phase", "label": "2. Orquestación y Auditoría IA", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "delivery_phase", "label": "3. Trazabilidad y Salida", "fromCol": 4, "toCol": 4 }
+  ],
+  "groups": [],
+  "mainPath": [
+    "recruitment_ats",
+    "job_service",
+    "user_message",
+    "azure_openai",
+    "evaluation_dto",
+    "output_response"
+  ],
+  "nodes": [
+    {
+      "id": "recruitment_ats",
+      "lane": "ingesta",
+      "col": 0,
+      "type": "external",
+      "label": "Plataforma ATS",
+      "sublabel": "Lote de vacantes crudas",
+      "tag": "1. Ingesta Batch",
+      "width": 150
+    },
+    {
+      "id": "job_service",
+      "lane": "backend",
+      "col": 1,
+      "type": "backend",
+      "label": "JobQualificationService",
+      "sublabel": "Iterador asíncrono .NET",
+      "tag": "2. Orquestación",
+      "width": 170
+    },
+    {
+      "id": "user_message",
+      "lane": "backend",
+      "col": 2,
+      "type": "messagebus",
+      "label": "ChatRequestUserMessage",
+      "sublabel": "Inyección de originalJd",
+      "tag": "Input Dinámico",
+      "width": 170
+    },
+    {
+      "id": "master_prompt",
+      "lane": "ia",
+      "col": 2,
+      "type": "security",
+      "label": "Master Prompt AVVA",
+      "sublabel": "Reglas y compliance legal",
+      "tag": "Auditor Legal",
+      "width": 170
+    },
+    {
+      "id": "azure_openai",
+      "lane": "ia",
+      "col": 3,
+      "type": "cloud",
+      "label": "Azure OpenAI (GPT-4o)",
+      "sublabel": "Score y sanitización IA",
+      "tag": "3. Auditoría IA",
+      "width": 175
+    },
+    {
+      "id": "evaluation_dto",
+      "lane": "backend",
+      "col": 3,
+      "type": "backend",
+      "label": "EvaluationDataDto",
+      "sublabel": "JsonObject validado",
+      "tag": "Score + Rewritten",
+      "width": 170
+    },
+    {
+      "id": "postgres_db",
+      "lane": "data",
+      "col": 4,
+      "type": "database",
+      "label": "PostgreSQL",
+      "sublabel": "AvvaEvaluationResult",
+      "tag": "4. Almacenamiento",
+      "width": 160
+    },
+    {
+      "id": "output_response",
+      "lane": "ingesta",
+      "col": 4,
+      "type": "frontend",
+      "label": "Vacante Certificada",
+      "sublabel": "Objeto approved: YES",
+      "tag": "5. Salida Lista",
+      "width": 160
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_batch_in",
+      "from": "recruitment_ats",
+      "to": "job_service",
+      "label": "Envío de lote",
+      "variant": "default"
+    },
+    {
+      "id": "edge_prep_msg",
+      "from": "job_service",
+      "to": "user_message",
+      "label": "Prepara mensaje",
+      "variant": "default"
+    },
+    {
+      "id": "edge_prompt_rules",
+      "from": "master_prompt",
+      "to": "azure_openai",
+      "label": "Inyecta reglas",
+      "variant": "security"
+    },
+    {
+      "id": "edge_invoke_ai",
+      "from": "user_message",
+      "to": "azure_openai",
+      "label": "Llamada asíncrona",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edge_dto_out",
+      "from": "azure_openai",
+      "to": "evaluation_dto",
+      "label": "JSON estructurado",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edge_save_db",
+      "from": "evaluation_dto",
+      "to": "postgres_db",
+      "label": "Guarda trazabilidad",
+      "variant": "dashed"
+    },
+    {
+      "id": "edge_cert_out",
+      "from": "evaluation_dto",
+      "to": "output_response",
+      "label": "Certifica vacante",
+      "variant": "emphasis",
+      "role": "return",
+      "fromSide": "right",
+      "toSide": "bottom"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Auditoría Automática y Reparación",
+      "items": [
+        "AVVA siempre repara y aprueba la vacante (approved: YES) sin cuellos de botella",
+        "Estructura garantizada mediante ChatCompletionsResponseFormat.JsonObject"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Cumplimiento Legal y Trazabilidad",
+      "items": [
+        "Eliminación de sesgos, datos confidenciales y menciones salariales",
+        "Registro de texto original y sanitizado en PostgreSQL para auditoría completa"
+      ]
+    }
+  ]
+}

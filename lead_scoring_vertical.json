@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Flujo de Trabajo E2E - Lead Scoring (Vertical)",
+    "output": "lead_scoring_vertical.html",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [800, 1600]
+  },
+  "layout": {
+    "mode": "grid",
+    "origin": [250, 80],
+    "cols": 1,
+    "gapX": 0,
+    "gapY": 70,
+    "cellW": 220,
+    "cellH": 64
+  },
+  "components": [
+    { "id": "cv_pdf", "type": "database", "label": "CV PDFs", "sublabel": "OneLake (9.1k)", "row": 0, "col": 0, "size": [160, 64] },
+    { "id": "nano_extractor", "type": "backend", "label": "Extracción (GPT-Nano)", "sublabel": "Nivel inglés, Exp", "tag": "LLM", "row": 1, "col": 0, "size": [160, 64] },
+    { "id": "large_embedder", "type": "backend", "label": "Vectorización", "sublabel": "Text Embed 3 (3072-d)", "tag": "Embedding", "row": 2, "col": 0, "size": [160, 64] },
+    { "id": "pg_pool", "type": "database", "label": "Pool READY", "sublabel": "PostgreSQL pgvector", "tag": "halfvec", "row": 3, "col": 0, "size": [160, 64] },
+    { "id": "jd_input", "type": "frontend", "label": "Requisitos Vacante", "sublabel": "Job Description", "pos": [520, 616], "size": [160, 64] },
+    { "id": "filter_country", "type": "security", "label": "Filtro: País/Scope", "row": 4, "col": 0, "size": [160, 64] },
+    { "id": "filter_english", "type": "security", "label": "Filtro: Inglés", "row": 5, "col": 0, "size": [160, 64] },
+    { "id": "filter_vertical", "type": "security", "label": "Filtro: Industria", "row": 6, "col": 0, "size": [160, 64] },
+    { "id": "filter_experience", "type": "security", "label": "Filtro: Experiencia", "row": 7, "col": 0, "size": [160, 64] },
+    { "id": "vector_search", "type": "backend", "label": "Búsqueda Vectorial", "sublabel": "Similitud Coseno", "tag": "pgvector", "row": 8, "col": 0, "size": [160, 64] },
+    { "id": "mini_evaluator", "type": "backend", "label": "Evaluador (GPT-Mini)", "sublabel": "Score Semántico 0-100", "tag": "Evaluación", "row": 9, "col": 0, "size": [160, 64] },
+    { "id": "recommendations", "type": "frontend", "label": "Recomendados", "sublabel": "Score >= 80", "row": 10, "col": 0, "size": [160, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Etapa 1: Ingesta", "wraps": ["cv_pdf", "nano_extractor", "large_embedder", "pg_pool"] },
+    { "kind": "security-group", "label": "Etapa 2: Matching", "wraps": ["jd_input", "filter_country", "filter_english", "filter_vertical", "filter_experience", "vector_search", "mini_evaluator", "recommendations"] }
+  ],
+  "connections": [
+    { "from": "cv_pdf", "to": "nano_extractor", "fromSide": "bottom", "toSide": "top" },
+    { "from": "nano_extractor", "to": "large_embedder", "fromSide": "bottom", "toSide": "top" },
+    { "from": "large_embedder", "to": "pg_pool", "fromSide": "bottom", "toSide": "top" },
+    { "from": "jd_input", "to": "filter_country", "fromSide": "left", "toSide": "right", "variant": "dashed" },
+    { "from": "pg_pool", "to": "filter_country", "fromSide": "bottom", "toSide": "top" },
+    { "from": "filter_country", "to": "filter_english", "fromSide": "bottom", "toSide": "top" },
+    { "from": "filter_english", "to": "filter_vertical", "fromSide": "bottom", "toSide": "top" },
+    { "from": "filter_vertical", "to": "filter_experience", "fromSide": "bottom", "toSide": "top" },
+    { "from": "filter_experience", "to": "vector_search", "fromSide": "bottom", "toSide": "top" },
+    { "from": "vector_search", "to": "mini_evaluator", "fromSide": "bottom", "toSide": "top" },
+    { "from": "mini_evaluator", "to": "recommendations", "fromSide": "bottom", "toSide": "top", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Ingesta Automatizada", "items": ["9.1k CVs leídos sin intervención manual.", "Extracción estructurada con IA y generación de vectores 3072-d."] },
+    { "dot": "cyan", "title": "Matching de Precisión", "items": ["4 filtros principales eliminan perfiles no cualificados.", "Similitud coseno con pgvector rankea los resultados.", "Evaluación IA de 0 a 100 con anti-duplicidad."] }
+  ]
+}

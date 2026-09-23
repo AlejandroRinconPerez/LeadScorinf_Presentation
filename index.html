@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Lead Scoring - Presentación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --slide-width: 1280px;
+      --slide-height: 720px;
+      --bg-dark: #ffffff;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --brand-teal-deep: #007685;
+      --brand-teal-cyan: #03B9D4;
+      --brand-orange-deep: #EE7825;
+      --brand-orange-sand: #EEA157;
+      
+      /* Semantic color mappings */
+      --accent-blue: #007685;
+      --accent-purple: #03B9D4;
+      --accent-green: #007685;
+      --accent-yellow: #EEA157;
+      --accent-red: #EE7825;
+      --accent-orange: #EE7825;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(3, 185, 212, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(238, 120, 37, 0.07) 0%, transparent 40%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Deck Frame Wrapper */
+    .deck-wrapper {
+      position: relative;
+      width: var(--slide-width);
+      height: var(--slide-height);
+      box-shadow: 0 25px 65px -12px rgba(0, 118, 133, 0.12), 0 10px 30px -10px rgba(0, 0, 0, 0.06);
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      flex-shrink: 0;
+      background-color: #ffffff;
+    }
+
+    /* Top deck real-time progress indicator */
+    .deck-progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #007685, #03B9D4, #EEA157, #EE7825);
+      width: 11.11%;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+      box-shadow: 0 0 10px rgba(3, 185, 212, 0.4);
+    }
+
+    .slide-container {
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      background-image:
+        radial-gradient(circle at 85% 15%, rgba(3, 185, 212, 0.035) 0%, transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(238, 161, 87, 0.035) 0%, transparent 45%),
+        radial-gradient(rgba(0, 118, 133, 0.035) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 28px 28px;
+      color: #0f172a;
+      overflow: hidden;
+      position: relative;
+      display: none;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .slide-container.active {
+      display: block;
+    }
+
+    #slide1.active,
+    #slide10.active,
+    .cover-slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.985);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .slide-content {
+      padding: 3rem 4rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+
+    .slide-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.35rem;
+      font-weight: 700;
+      color: #007685;
+      margin-bottom: 1.75rem;
+      border-bottom: 2px solid rgba(0, 118, 133, 0.15);
+      padding-bottom: 0.85rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .slide-text {
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: #475569;
+    }
+
+    .highlight {
+      color: #007685;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       PREMIUM METRIC CARDS & HOVER EFFECTS (LIGHT CANVAS)
+       ========================================================= */
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+      box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+    }
+
+    /* Subtle top edge glow reflection line */
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 118, 133, 0.15), transparent);
+      opacity: 0.6;
+      transition: opacity 0.3s ease, background 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Dynamic sheen ray sweeping on hover */
+    .metric-card::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -80%;
+      width: 50%;
+      height: 220%;
+      background: linear-gradient(
+        55deg,
+        rgba(255, 255, 255, 0) 10%,
+        rgba(3, 185, 212, 0.08) 50%,
+        rgba(255, 255, 255, 0) 90%
+      );
+      transform: rotate(25deg);
+      transition: left 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      background-color: #ffffff;
+      border-color: rgba(3, 185, 212, 0.4);
+      box-shadow: 0 18px 35px -8px rgba(0, 118, 133, 0.16), 0 0 20px rgba(3, 185, 212, 0.1);
+    }
+
+    .metric-card:hover::after {
+      left: 150%;
+    }
+
+    .metric-card:hover::before {
+      opacity: 1;
+      background: linear-gradient(90deg, transparent, rgba(0, 118, 133, 0.3), transparent);
+    }
+
+    /* Icon micro-animations inside metric cards */
+    .metric-card i {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+    }
+
+    .metric-card:hover i {
+      transform: scale(1.15) rotate(2deg);
+      filter: drop-shadow(0 2px 8px currentColor);
+    }
+
+    /* Circular/square badge wrappers inside cards */
+    .metric-card .w-20,
+    .metric-card .w-16,
+    .metric-card .w-12 {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .metric-card:hover .w-20,
+    .metric-card:hover .w-16,
+    .metric-card:hover .w-12 {
+      transform: scale(1.08);
+    }
+
+    /* Color-tuned Glow Responses based on the 4 brand colors */
+    .metric-card[class*="border-t-[#EE7825]"]:hover,
+    .metric-card[class*="border-l-[#EE7825]"]:hover {
+      box-shadow: 0 18px 36px -8px rgba(238, 120, 37, 0.22), 0 0 25px -4px rgba(238, 120, 37, 0.15);
+      border-color: rgba(238, 120, 37, 0.6);
+    }
+
+    .metric-card[class*="border-t-[#EE7825]"]:hover::before,
+    .metric-card[class*="border-l-[#EE7825]"]:hover::before {
+      background: linear-gradient(90deg, transparent, rgba(238, 120, 37, 0.7), transparent);
+    }
+
+    .metric-card[class*="border-t-[#EEA157]"]:hover,
+    .metric-card[class*="border-l-[#EEA157]"]:hover {
+      box-shadow: 0 18px 36px -8px rgba(238, 161, 87, 0.22), 0 0 25px -4px rgba(238, 161, 87, 0.15);
+      border-color: rgba(238, 161, 87, 0.6);
+    }
+
+    .metric-card[class*="border-t-[#EEA157]"]:hover::before,
+    .metric-card[class*="border-l-[#EEA157]"]:hover::before {
+      background: linear-gradient(90deg, transparent, rgba(238, 161, 87, 0.7), transparent);
+    }
+
+    .metric-card[class*="border-t-[#007685]"]:hover,
+    .metric-card[class*="border-l-[#007685]"]:hover {
+      box-shadow: 0 18px 36px -8px rgba(0, 118, 133, 0.22), 0 0 25px -4px rgba(0, 118, 133, 0.15);
+      border-color: rgba(0, 118, 133, 0.6);
+    }
+
+    .metric-card[class*="border-t-[#007685]"]:hover::before,
+    .metric-card[class*="border-l-[#007685]"]:hover::before {
+      background: linear-gradient(90deg, transparent, rgba(0, 118, 133, 0.7), transparent);
+    }
+
+    .metric-card[class*="border-t-[#03B9D4]"]:hover,
+    .metric-card[class*="border-l-[#03B9D4]"]:hover,
+    .metric-card[class*="border-[#03B9D4]"]:hover {
+      box-shadow: 0 18px 36px -8px rgba(3, 185, 212, 0.25), 0 0 25px -4px rgba(3, 185, 212, 0.18);
+      border-color: rgba(3, 185, 212, 0.6);
+    }
+
+    .metric-card[class*="border-t-[#03B9D4]"]:hover::before,
+    .metric-card[class*="border-l-[#03B9D4]"]:hover::before {
+      background: linear-gradient(90deg, transparent, rgba(3, 185, 212, 0.7), transparent);
+    }
+
+    /* Tech Badges (Slide 1) */
+    .tech-badge {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 10px 22px;
+      border-radius: 30px;
+      color: #0f172a;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: default;
+    }
+
+    .tech-badge:hover {
+      transform: translateY(-4px) scale(1.03);
+      background: #ffffff;
+      border-color: rgba(3, 185, 212, 0.6);
+      box-shadow: 0 10px 22px -4px rgba(0, 118, 133, 0.15), 0 0 16px rgba(3, 185, 212, 0.15);
+    }
+
+    .tech-badge i {
+      transition: transform 0.3s ease;
+    }
+
+    .tech-badge:hover i {
+      transform: scale(1.2);
+    }
+
+    /* High-tech Presenter Note Button */
+    .presenter-note {
+      position: absolute;
+      bottom: 2.2rem;
+      right: 4rem;
+      background: linear-gradient(135deg, rgba(0, 118, 133, 0.08) 0%, rgba(3, 185, 212, 0.08) 100%);
+      color: #007685;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1px solid rgba(0, 118, 133, 0.3);
+      box-shadow: 0 6px 18px -4px rgba(0, 118, 133, 0.12);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      z-index: 20;
+    }
+
+    .presenter-note:hover {
+      background: linear-gradient(135deg, #007685 0%, #03B9D4 100%);
+      border-color: #007685;
+      box-shadow: 0 12px 28px -4px rgba(0, 118, 133, 0.3), 0 0 20px rgba(3, 185, 212, 0.2);
+      transform: translateY(-4px) scale(1.04);
+      color: #ffffff;
+    }
+
+    /* Modern Floating Controls */
+    .presentation-nav {
+      position: fixed;
+      bottom: 1.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1.25rem;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 0.6rem 1.6rem;
+      border-radius: 50px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 118, 133, 0.2);
+      box-shadow: 0 12px 30px -5px rgba(0, 118, 133, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+      z-index: 50;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .presentation-nav:hover {
+      border-color: rgba(3, 185, 212, 0.5);
+      box-shadow: 0 16px 36px -5px rgba(0, 118, 133, 0.2), 0 0 25px rgba(3, 185, 212, 0.15);
+    }
+
+    .nav-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #007685;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      font-size: 1.15rem;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      color: #ffffff;
+      background: #007685;
+      border-color: #007685;
+      transform: scale(1.12);
+      box-shadow: 0 0 14px rgba(0, 118, 133, 0.35);
+    }
+
+    .nav-btn:active:not(:disabled) {
+      transform: scale(0.92);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .slide-indicator {
+      display: flex;
+      align-items: center;
+      color: #64748b;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      padding: 0 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .slide-indicator span#currentSlideNum {
+      color: #007685;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-right: 2px;
+    }
+
+    /* Code Viewer for Input/Output DTOs & Prompts */
+    .code-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12);
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    .code-card-header {
+      background: #1e293b;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .code-card-body {
+      padding: 1.25rem;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .tok-key { color: #03B9D4; font-weight: 600; }
+    .tok-str { color: #EEA157; }
+    .tok-num { color: #EE7825; font-weight: 600; }
+    .tok-punct { color: #94a3b8; }
+    .tok-comment { color: #64748b; font-style: italic; }
+  </style>
+</head>
+
+<body>
+
+  <!-- Main Presentation Deck Frame -->
+  <div class="deck-wrapper">
+    <!-- Top Deck Real-Time Progress Bar -->
+    <div id="slideProgressBar" class="deck-progress-bar"></div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide-container active" id="slide1"
+      style="padding:64px;box-sizing:border-box;
+              background: linear-gradient(135deg, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%);flex-direction:column;justify-content:center;position:relative;">
+
+      <!-- Decorative Background Elements -->
+      <div
+        style="position:absolute; top:-15%; left:-10%; width:600px; height:600px; background:radial-gradient(circle, rgba(3,185,212,0.12) 0%, rgba(255,255,255,0) 70%); border-radius:50%; filter:blur(40px); z-index:0; pointer-events:none;">
+      </div>
+      <div
+        style="position:absolute; bottom:-20%; right:-10%; width:700px; height:700px; background:radial-gradient(circle, rgba(238,120,37,0.08) 0%, rgba(255,255,255,0) 70%); border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;">
+      </div>
+      <div
+        style="position:absolute; top:0; left:0; right:0; bottom:0; background-image: radial-gradient(rgba(0,118,133,0.05) 1px, transparent 1px); background-size: 30px 30px; z-index:0; pointer-events:none;">
+      </div>
+
+      <div style="position:relative;z-index:1;max-width:950px; padding-left:32px;">
+        <div style="display:flex;align-items:center;gap:16px;margin:0 0 32px 0;">
+          <div style="width:60px;height:3px;background:linear-gradient(90deg, #007685, #03B9D4); border-radius:2px;">
+          </div>
+          <p contenteditable="true"
+            style="font-family:'Space Grotesk',sans-serif;font-size:18px;color:#007685;text-transform:uppercase;letter-spacing:3px;margin:0;font-weight:600;">
+            Resultados de Matching
+          </p>
+        </div>
+
+        <h1 contenteditable="true" style="font-family:'Space Grotesk',sans-serif;font-size:84px;font-weight:700;color:#0f172a;
+                  margin:0 0 24px 0;line-height:1.1; letter-spacing:-1px;">
+          Sistema de <br>
+          <span
+            style="background: linear-gradient(90deg, #007685, #03B9D4, #EE7825); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Lead
+            Scoring</span>
+        </h1>
+
+        <p contenteditable="true" style="font-family:'Inter',sans-serif;font-size:26px;color:#475569;
+                  margin:0;line-height:1.5;max-width:800px;font-weight:400;">
+          Evaluación y puntuación semántica de candidatos frente a requisitos de vacantes mediante Inteligencia
+          Artificial.
+        </p>
+
+        <!-- Tech Badges with Micro-interactions -->
+        <div style="display:flex; gap:16px; margin-top:56px;">
+          <div class="tech-badge">
+            <i class="fa-solid fa-microchip" style="color:#007685;"></i> AI Matching
+          </div>
+          <div class="tech-badge">
+            <i class="fa-solid fa-database" style="color:#03B9D4;"></i> Base Vectorial
+          </div>
+          <div class="tech-badge">
+            <i class="fa-solid fa-bolt" style="color:#EE7825;"></i> Calificación en Tiempo Real
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: La Problemática -->
+    <div class="slide-container" id="slide2">
+      <div class="slide-content relative">
+        <h2 class="slide-title" style="color: #EE7825; border-color: rgba(238, 120, 37, 0.2);">El Desafío Original</h2>
+
+        <p class="slide-text mb-6 text-center max-w-4xl mx-auto">
+          Antes de la implementación de la Inteligencia Artificial, el equipo de reclutamiento se enfrentaba a un
+          escenario donde el valor de nuestros datos no se reflejaba en la agilidad del proceso.
+        </p>
+
+        <div class="grid grid-cols-3 gap-8 mt-2">
+          <!-- Card 1: Base de datos -->
+          <div
+            class="metric-card border-t-4 border-t-[#EE7825] flex flex-col items-center text-center pt-8">
+            <div class="w-20 h-20 rounded-full bg-[#EE7825]/10 flex items-center justify-center mb-6">
+              <i class="fa-solid fa-database text-4xl text-[#EE7825]"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-[#0f172a] mb-4">Pool Subutilizado</h3>
+            <p class="text-[#475569] text-lg">
+              Una base de datos inmensa de candidatos valiosos que no se estaba aprovechando correctamente, actuando
+              casi como un repositorio estático.
+            </p>
+          </div>
+
+          <!-- Card 2: Manual -->
+          <div
+            class="metric-card border-t-4 border-t-[#EEA157] flex flex-col items-center text-center pt-8">
+            <div class="w-20 h-20 rounded-full bg-[#EEA157]/15 flex items-center justify-center mb-6">
+              <i class="fa-solid fa-people-arrows text-4xl text-[#EE7825]"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-[#0f172a] mb-4">Cuello de Botella Manual</h3>
+            <p class="text-[#475569] text-lg">
+              El cruce y relacionamiento entre el perfil del candidato y los requisitos de la vacante se hacía de forma
+              <span class="highlight text-[#EE7825]">completamente manual</span>.
+            </p>
+          </div>
+
+          <!-- Card 3: Tiempo -->
+          <div
+            class="metric-card border-t-4 border-t-[#007685] flex flex-col items-center text-center pt-8">
+            <div class="w-20 h-20 rounded-full bg-[#007685]/10 flex items-center justify-center mb-6">
+              <i class="fa-solid fa-hourglass-half text-4xl text-[#007685]"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-[#0f172a] mb-4">Pérdida de Tiempo</h3>
+            <p class="text-[#475569] text-lg">
+              Múltiples <span class="highlight text-[#007685]">horas de trabajo operativo</span> invertidas por los
+              reclutadores en cada vacante, solo analizando y filtrando perfiles.
+            </p>
+          </div>
+        </div>
+
+        <a href="lead_scoring_ai_match_workflow.html" target="_blank" class="presenter-note" title="Abrir flujo interactivo de IA en pestaña nueva">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>Ver Diagrama de Flujo IA</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-75"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide 3: Introducción al Sistema de Lead Scoring -->
+    <div class="slide-container" id="slide3">
+      <div class="slide-content">
+        <h2 class="slide-title">La Solución: Sistema de Lead Scoring</h2>
+
+        <div class="grid grid-cols-12 gap-8 h-full">
+          <!-- Left Column: Objective & Impact -->
+          <div class="col-span-5 flex flex-col justify-center">
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold text-[#0f172a] mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-bullseye text-[#007685]"></i> Objetivo Principal
+              </h3>
+              <p class="slide-text">
+                Automatizar la evaluación y puntuación de candidatos frente a los requisitos de cualquier vacante
+                utilizando <span class="highlight text-[#007685]">Inteligencia Artificial</span>.
+              </p>
+            </div>
+
+            <div class="metric-card border-l-4 border-l-[#007685] border border-[#007685]/15">
+              <h3 class="text-xl font-semibold text-[#0f172a] mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-rocket text-[#007685]"></i> Impacto del Sistema
+              </h3>
+              <ul class="slide-text space-y-2 list-none">
+                <li><i class="fa-solid fa-check text-[#007685] text-sm mr-2"></i> Elimina revisiones manuales</li>
+                <li><i class="fa-solid fa-check text-[#007685] text-sm mr-2"></i> Filtra de forma precisa y masiva</li>
+                <li><i class="fa-solid fa-check text-[#007685] text-sm mr-2"></i> Previene duplicidad de candidatos</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Right Column: Pipeline/Components -->
+          <div class="col-span-7 flex flex-col justify-center">
+            <h3 class="text-xl font-semibold text-[#0f172a] mb-6">Componentes Core (Pipeline)</h3>
+
+            <div class="space-y-4">
+              <!-- Step 1 -->
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-white border-2 border-[#007685] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_4px_12px_rgba(0,118,133,0.15)]">
+                  <i class="fa-solid fa-file-pdf text-[#007685]"></i>
+                </div>
+                <div class="metric-card flex-grow pt-3 pb-3 border-l-4 border-l-[#007685]">
+                  <h4 class="text-[#0f172a] font-semibold mb-1">1. Ingesta</h4>
+                  <p class="text-[#475569] text-sm">Extrae datos estructurados de CVs en PDF usando IA.</p>
+                </div>
+              </div>
+
+              <div class="w-0.5 h-6 bg-gradient-to-b from-[#007685] to-[#03B9D4] ml-6 my-[-1rem] z-0"></div>
+
+              <!-- Step 2 -->
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-white border-2 border-[#03B9D4] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_4px_12px_rgba(3,185,212,0.15)]">
+                  <i class="fa-solid fa-database text-[#03B9D4]"></i>
+                </div>
+                <div class="metric-card flex-grow pt-3 pb-3 border-l-4 border-l-[#03B9D4]">
+                  <h4 class="text-[#0f172a] font-semibold mb-1">2. Base Vectorial</h4>
+                  <p class="text-[#475569] text-sm">Usa <code
+                      class="bg-[#f1f5f9] px-1.5 py-0.5 rounded text-[#007685] font-semibold">pgvector</code> para buscar perfiles por
+                    similitud semántica.</p>
+                </div>
+              </div>
+
+              <div class="w-0.5 h-6 bg-gradient-to-b from-[#03B9D4] to-[#EE7825] ml-6 my-[-1rem] z-0"></div>
+
+              <!-- Step 3 -->
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-white border-2 border-[#EE7825] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_4px_12px_rgba(238,120,37,0.15)]">
+                  <i class="fa-solid fa-brain text-[#EE7825]"></i>
+                </div>
+                <div class="metric-card flex-grow pt-3 pb-3 border-l-4 border-l-[#EE7825]">
+                  <h4 class="text-[#0f172a] font-semibold mb-1">3. Evaluación Inteligente</h4>
+                  <p class="text-[#475569] text-sm">Evalúa el "fit" del candidato y asigna un score de 0 a 100 en tiempo
+                    real.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Flujo de Trabajo Arquitectónico -->
+    <div class="slide-container" id="slide4">
+      <div class="slide-content relative">
+        <h2 class="slide-title">Flujo de Trabajo Arquitectónico (End-to-End)</h2>
+
+        <div class="grid grid-cols-2 gap-12 mt-4">
+          <!-- Stage 1 -->
+          <div class="metric-card border-t-4 border-t-[#007685]">
+            <h3 class="text-2xl font-bold text-[#0f172a] mb-6 border-b border-slate-200 pb-3">Etapa 1: Ingesta (El Pool)</h3>
+            <ul class="space-y-5 slide-text">
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#007685]/10 text-[#007685] flex items-center justify-center font-bold text-sm mt-1 shrink-0">1</span>
+                <div><strong class="text-[#0f172a]">OneLake:</strong> Se reciben los PDFs de los candidatos (9.1k+).</div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#007685]/10 text-[#007685] flex items-center justify-center font-bold text-sm mt-1 shrink-0">2</span>
+                <div><strong class="text-[#0f172a]">GPT-4 Nano:</strong> Extrae experiencia, nivel de inglés e industria.
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#007685]/10 text-[#007685] flex items-center justify-center font-bold text-sm mt-1 shrink-0">3</span>
+                <div><strong class="text-[#0f172a]">Text Embed 3:</strong> Convierte el perfil a un vector de 3072
+                  dimensiones.</div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#007685]/10 text-[#007685] flex items-center justify-center font-bold text-sm mt-1 shrink-0">4</span>
+                <div><strong class="text-[#0f172a]">Pool READY:</strong> Almacena en PostgreSQL. Hoy contamos con <span
+                    class="highlight text-[#007685]">9.000 candidatos READY</span>.</div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Stage 2 -->
+          <div class="metric-card border-t-4 border-t-[#EE7825]">
+            <h3 class="text-2xl font-bold text-[#0f172a] mb-6 border-b border-slate-200 pb-3">Etapa 2: Matching & Evaluación
+            </h3>
+            <ul class="space-y-5 slide-text">
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#EE7825]/10 text-[#EE7825] flex items-center justify-center font-bold text-sm mt-1 shrink-0">1</span>
+                <div><strong class="text-[#0f172a]">Job Description (JD):</strong> Se vectorizan los requisitos de la
+                  vacante.</div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#EE7825]/10 text-[#EE7825] flex items-center justify-center font-bold text-sm mt-1 shrink-0">2</span>
+                <div><strong class="text-[#0f172a]">Filtros Duros:</strong> Cascada SQL de 4 filtros clave que descartan
+                  candidatos (Inglés, Localización, Experiencia y Vertical).</div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#EE7825]/10 text-[#EE7825] flex items-center justify-center font-bold text-sm mt-1 shrink-0">3</span>
+                <div><strong class="text-[#0f172a]">Evaluación GPT-4 Mini:</strong> IA califica a los candidatos que
+                  sobreviven a los filtros.</div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-[#EE7825]/10 text-[#EE7825] flex items-center justify-center font-bold text-sm mt-1 shrink-0">4</span>
+                <div><strong class="text-[#0f172a]">Recomendación:</strong> Se publican los candidatos con <span
+                    class="highlight text-[#EE7825]">Score ≥ 80</span>.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <a href="lead_scoring_vertical.html" target="_blank" class="presenter-note"
+          title="Abrir arquitectura interactiva completa en pestaña nueva">
+          <i class="fa-solid fa-sitemap"></i>
+          <span>Ver Diagrama Interactivo E2E</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-75"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide 5: El Embudo Real -->
+    <div class="slide-container" id="slide5">
+      <div class="slide-content">
+        <h2 class="slide-title" style="color: #EE7825; border-color: rgba(238, 120, 37, 0.2);">El Embudo Real (Hard Filters)</h2>
+
+        <div class="flex flex-col h-full">
+          <p class="slide-text mb-8">
+            El sistema es riguroso. De 5.457 candidatos elegibles, veamos cómo opera el embudo promedio:
+          </p>
+
+          <!-- 2x2 Grid for Filters -->
+          <div class="grid grid-cols-2 gap-6 mb-8 flex-grow">
+            <div class="metric-card border-l-4 border-l-[#EE7825] flex flex-col justify-center">
+              <h4 class="text-[#0f172a] font-bold text-lg mb-2">Experiencia Mínima</h4>
+              <p class="text-[#475569]">Filtro más fuerte. Elimina el <span
+                  class="text-[#EE7825] font-bold text-xl">40.0%</span> del pool.</p>
+            </div>
+
+            <div class="metric-card border-l-4 border-l-[#EEA157] flex flex-col justify-center">
+              <h4 class="text-[#0f172a] font-bold text-lg mb-2">Nivel de Inglés</h4>
+              <p class="text-[#475569]">Elimina el <span class="text-[#EE7825] font-bold text-xl">36.7%</span> del pool
+                (Ej. vacantes C1/C2).</p>
+            </div>
+
+            <div class="metric-card border-l-4 border-l-[#03B9D4] flex flex-col justify-center">
+              <h4 class="text-[#0f172a] font-bold text-lg mb-2">Vertical / Industria</h4>
+              <p class="text-[#475569]">Filtra un <span class="text-[#007685] font-bold text-xl">12.0%</span>.</p>
+            </div>
+
+            <div class="metric-card border-l-4 border-l-[#007685] flex flex-col justify-center">
+              <h4 class="text-[#0f172a] font-bold text-lg mb-2">Localización</h4>
+              <p class="text-[#475569]">Asegura el descarte de perfiles que se encuentran fuera de la geografía
+                requerida por la vacante.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Cómo se calcula el Score -->
+    <div class="slide-container" id="slide6">
+      <div class="slide-content">
+        <h2 class="slide-title">Modelo de Evaluación: ¿Cómo se compone el Score?</h2>
+        <p class="slide-text mb-6">La IA asigna una puntuación de 0 a 100 basada en 5 dimensiones ponderadas que
+          analizan en profundidad el perfil contra la vacante (JD):</p>
+
+        <div class="grid grid-cols-12 gap-6 h-full pb-8">
+          <!-- 60% - Profile Global -->
+          <div class="col-span-5 flex flex-col">
+            <div
+              class="metric-card border-t-4 border-t-[#007685] flex-grow flex flex-col justify-center relative overflow-hidden bg-gradient-to-b from-white to-slate-50">
+              <div class="absolute -right-6 -bottom-6 text-[#007685] opacity-[0.05]">
+                <i class="fa-solid fa-ranking-star text-[12rem]"></i>
+              </div>
+              <div class="text-[#007685] font-bold text-6xl font-['Space_Grotesk'] mb-4 flex items-center gap-3">
+                60%
+              </div>
+              <h3 class="text-2xl font-bold text-[#0f172a] mb-3">Ajuste Global (Profile)</h3>
+              <p class="text-[#475569] text-lg leading-relaxed z-10">
+                Evalúa el nivel, seniority aparente, trayectoria general y qué tan bien encaja el perfil completo del
+                candidato con la esencia estructural de la vacante.
+              </p>
+            </div>
+          </div>
+
+          <!-- The four 10% blocks -->
+          <div class="col-span-7 grid grid-cols-2 gap-4">
+            <!-- Skills -->
+            <div class="metric-card border-l-4 border-l-[#007685] flex flex-col justify-center">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-[#0f172a] font-bold text-lg flex items-center gap-2"><i
+                    class="fa-solid fa-code text-[#007685] text-sm"></i> Habilidades</h4>
+                <span class="text-[#007685] font-bold text-xl bg-[#007685]/10 px-2 py-1 rounded">10%</span>
+              </div>
+              <p class="text-[#475569] text-sm">Habilidades técnicas y blandas (Skills) vs. lo que pide y prefiere la
+                vacante.</p>
+            </div>
+
+            <!-- Job Positions -->
+            <div class="metric-card border-l-4 border-l-[#03B9D4] flex flex-col justify-center">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-[#0f172a] font-bold text-lg flex items-center gap-2"><i
+                    class="fa-solid fa-briefcase text-[#03B9D4] text-sm"></i> Cargos & Funciones</h4>
+                <span class="text-[#03B9D4] font-bold text-xl bg-[#03B9D4]/10 px-2 py-1 rounded">10%</span>
+              </div>
+              <p class="text-[#475569] text-sm">Experiencia real y funciones (no solo el título) vs. responsabilidades
+                de la vacante.</p>
+            </div>
+
+            <!-- Education -->
+            <div class="metric-card border-l-4 border-l-[#EEA157] flex flex-col justify-center">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-[#0f172a] font-bold text-lg flex items-center gap-2"><i
+                    class="fa-solid fa-graduation-cap text-[#EE7825] text-sm"></i> Formación</h4>
+                <span class="text-[#EE7825] font-bold text-xl bg-[#EEA157]/20 px-2 py-1 rounded">10%</span>
+              </div>
+              <p class="text-[#475569] text-sm">Formación académica y certificaciones obtenidas vs. los requerimientos
+                de la JD.</p>
+            </div>
+
+            <!-- Industries -->
+            <div class="metric-card border-l-4 border-l-[#EE7825] flex flex-col justify-center">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-[#0f172a] font-bold text-lg flex items-center gap-2"><i
+                    class="fa-solid fa-industry text-[#EE7825] text-sm"></i> Industrias</h4>
+                <span class="text-[#EE7825] font-bold text-xl bg-[#EE7825]/10 px-2 py-1 rounded">10%</span>
+              </div>
+              <p class="text-[#475569] text-sm">Sectores e industrias en las que trabajó vs. la industria o vertical de
+                la vacante.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Resultados y Rendimiento Dinámico -->
+    <div class="slide-container" id="slide7">
+      <div class="slide-content">
+        <h2 class="slide-title">Resultados y Rendimiento Dinámico</h2>
+        <p class="slide-text mb-8">Basado en los cortes de validación de 47 vacantes procesadas simultáneamente:</p>
+
+        <div class="grid grid-cols-2 gap-8 mt-4">
+          <div class="metric-card border-l-4 border-l-[#007685] flex items-center gap-6">
+            <div
+              class="w-16 h-16 rounded-xl bg-[#007685]/10 border border-[#007685]/20 flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(0,118,133,0.12)]">
+              <i class="fa-solid fa-layer-group text-3xl text-[#007685]"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-[#0f172a] mb-1">Volumen</h3>
+              <p class="text-[#475569]">Se realizaron <strong class="text-[#0f172a]">4.523 preselecciones</strong> y <strong
+                  class="text-[#0f172a]">~4.773 evaluaciones</strong> semánticas por la IA.</p>
+            </div>
+          </div>
+
+          <div class="metric-card border-l-4 border-l-[#03B9D4] flex items-center gap-6">
+            <div
+              class="w-16 h-16 rounded-xl bg-[#03B9D4]/10 border border-[#03B9D4]/20 flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(3,185,212,0.12)]">
+              <i class="fa-solid fa-star text-3xl text-[#03B9D4]"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-[#0f172a] mb-1">Recomendaciones (≥80)</h3>
+              <p class="text-[#475569]"><strong class="text-[#007685] text-lg font-semibold">222 candidatos
+                  nuevos</strong> recomendados.</p>
+            </div>
+          </div>
+
+          <div class="metric-card border-l-4 border-l-[#EEA157] flex items-center gap-6">
+            <div
+              class="w-16 h-16 rounded-xl bg-[#EEA157]/15 border border-[#EEA157]/30 flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(238,161,87,0.12)]">
+              <i class="fa-solid fa-piggy-bank text-3xl text-[#EE7825]"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-[#0f172a] mb-1">Eficiencia de Costos</h3>
+              <p class="text-[#475569]">Las 4.2k evaluaciones se realizaron en ~2 horas, a una fracción mínima del costo
+                humano estimado (~$4.30 totales).</p>
+            </div>
+          </div>
+
+          <div class="metric-card border-l-4 border-l-[#EE7825] flex items-center gap-6">
+            <div
+              class="w-16 h-16 rounded-xl bg-[#EE7825]/10 border border-[#EE7825]/20 flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(238,120,37,0.12)]">
+              <i class="fa-solid fa-shield-halved text-3xl text-[#EE7825]"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-[#0f172a] mb-1">Cero Duplicados</h3>
+              <p class="text-[#475569]">El sistema anti-duplicidad protegió la experiencia del reclutador. Ningún
+                candidato fue recomendado a múltiples vacantes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Casos de Éxito y Afinidad del Pool -->
+    <div class="slide-container" id="slide8">
+      <div class="slide-content">
+        <h2 class="slide-title">Casos de Éxito y Afinidad del Pool</h2>
+        <p class="slide-text mb-6">El desempeño del algoritmo está estrechamente ligado a la afinidad del pool de
+          candidatos.</p>
+
+        <!-- Highlight Case -->
+        <div
+          class="metric-card border-l-4 border-l-[#007685] mb-8 relative overflow-hidden bg-gradient-to-r from-white via-cyan-50/20 to-[#007685]/5 p-6">
+          <div class="absolute top-0 right-0 p-4 text-[#03B9D4] opacity-15">
+            <i class="fa-solid fa-trophy text-8xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-[#007685] mb-3">El Caso de Éxito - Rol AGENT (JPC-6898)</h3>
+          <p class="text-lg text-[#0f172a]">439 superaron filtros, se evaluaron 96 candidatos, obteniendo <strong
+              class="text-[#007685]">87 recomendaciones de alta precisión</strong> en tiempo récord.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8">
+          <div class="metric-card border-l-4 border-l-[#007685]">
+            <h4 class="text-xl font-bold text-[#0f172a] mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-arrow-trend-up text-[#007685]"></i> Afinidad Alta
+            </h4>
+            <p class="text-[#475569]">BPO, Customer Service y Operaciones (Tasas de éxito en recomendaciones de hasta el
+              86%).</p>
+          </div>
+
+          <div class="metric-card border-l-4 border-l-[#EE7825]">
+            <h4 class="text-xl font-bold text-[#0f172a] mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-triangle-exclamation text-[#EE7825]"></i> Afinidad Baja (Oportunidad)
+            </h4>
+            <p class="text-[#475569]">Roles IT, QA e Ingeniería de Software tuvieron 0 recomendaciones debido a que el
+              pool actual carece de ese perfil tecnológico.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Próximos Pasos y Q&A -->
+    <div class="slide-container" id="slide9" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%);">
+      <div class="slide-content flex flex-col justify-center items-center text-center">
+        <div
+          class="w-24 h-24 rounded-full bg-gradient-to-br from-[#007685] to-[#03B9D4] flex items-center justify-center mb-8 shadow-[0_10px_25px_rgba(0,118,133,0.25)]">
+          <i class="fa-solid fa-rocket text-4xl text-white"></i>
+        </div>
+
+        <h2 class="text-5xl font-['Space_Grotesk'] font-bold text-[#0f172a] mb-6">
+          ¿Qué sigue ahora?
+        </h2>
+
+        <p class="text-2xl text-[#475569] mb-12 max-w-3xl leading-relaxed">
+          El sistema ya está demostrando su valor. Nuestro próximo objetivo es iterar el modelo, ampliar las verticales
+          de talento y conectar este pipeline directamente con las herramientas del reclutador.
+        </p>
+
+        <div class="flex gap-6 mt-4">
+          <div class="metric-card border-t-4 border-t-[#007685] px-10 py-5 cursor-pointer bg-white">
+            <h4 class="text-[#007685] font-bold text-2xl flex items-center gap-4">
+              <i class="fa-regular fa-comments text-3xl text-[#EE7825]"></i> Espacio de Preguntas & Respuestas (Q&A)
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         AVVA (Automatic Vacancy Validation Agent) - SLIDES 10-17
+         ========================================================= -->
+
+    <!-- Slide 10: Portada AVVA -->
+    <div class="slide-container cover-slide" id="slide10"
+      style="padding:64px;box-sizing:border-box;
+              background: linear-gradient(135deg, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%);flex-direction:column;justify-content:center;position:relative;">
+
+      <!-- Decorative Background Elements -->
+      <div
+        style="position:absolute; top:-15%; left:-10%; width:600px; height:600px; background:radial-gradient(circle, rgba(0,118,133,0.10) 0%, rgba(255,255,255,0) 70%); border-radius:50%; filter:blur(40px); z-index:0; pointer-events:none;">
+      </div>
+      <div
+        style="position:absolute; bottom:-20%; right:-10%; width:700px; height:700px; background:radial-gradient(circle, rgba(238,120,37,0.08) 0%, rgba(255,255,255,0) 70%); border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;">
+      </div>
+      <div
+        style="position:absolute; top:0; left:0; right:0; bottom:0; background-image: radial-gradient(rgba(0,118,133,0.05) 1px, transparent 1px); background-size: 30px 30px; z-index:0; pointer-events:none;">
+      </div>
+
+      <div style="position:relative;z-index:1;max-width:950px; padding-left:32px;">
+        <div style="display:flex;align-items:center;gap:16px;margin:0 0 32px 0;">
+          <div style="width:60px;height:3px;background:linear-gradient(90deg, #007685, #03B9D4); border-radius:2px;">
+          </div>
+          <p contenteditable="true"
+            style="font-family:'Space Grotesk',sans-serif;font-size:18px;color:#007685;text-transform:uppercase;letter-spacing:3px;margin:0;font-weight:600;">
+            Automatic Vacancy Validation Agent
+          </p>
+        </div>
+
+        <h1 contenteditable="true" style="font-family:'Space Grotesk',sans-serif;font-size:84px;font-weight:700;color:#0f172a;
+                  margin:0 0 24px 0;line-height:1.1; letter-spacing:-1px;">
+          Agente <br>
+          <span
+            style="background: linear-gradient(90deg, #007685, #03B9D4, #EE7825); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AVVA</span>
+        </h1>
+
+        <p contenteditable="true" style="font-family:'Inter',sans-serif;font-size:26px;color:#475569;
+                  margin:0;line-height:1.5;max-width:800px;font-weight:400;">
+          Auditoría, sanitización y reconstrucción de Job Descriptions con Inteligencia Artificial.
+        </p>
+
+        <!-- Tech Badges with Micro-interactions -->
+        <div style="display:flex; gap:16px; margin-top:56px;">
+          <div class="tech-badge">
+            <i class="fa-solid fa-code" style="color:#007685;"></i> Clean Architecture .NET
+          </div>
+          <div class="tech-badge">
+            <i class="fa-solid fa-brain" style="color:#03B9D4;"></i> Azure OpenAI GPT-4o
+          </div>
+          <div class="tech-badge">
+            <i class="fa-solid fa-scale-balanced" style="color:#EE7825;"></i> Employer Branding & Legal
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11 (AVVA Slide 1): ¿Qué es AVVA? -->
+    <div class="slide-container" id="slide11">
+      <div class="slide-content">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#007685]/10 text-[#007685] border border-[#007685]/20">
+            AVVA (Automatic Vacancy Validation Agent) - Project Overview
+          </span>
+          <span class="text-xs text-[#64748b] font-medium">Documento estructurado para generación automática de diapositivas (Slide-deck AI generator)</span>
+        </div>
+
+        <h2 class="slide-title">
+          <i class="fa-solid fa-robot text-[#007685]"></i>
+          AVVA: Agente Automático de Validación de Vacantes
+        </h2>
+
+        <div class="grid grid-cols-2 gap-6 mt-2 flex-grow">
+          <!-- Propósito principal -->
+          <div class="metric-card border-l-4 border-l-[#007685] flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-xl bg-[#007685]/10 border border-[#007685]/20 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-wand-magic-sparkles text-[#007685] text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-[#0f172a]">Propósito principal</h3>
+            </div>
+            <p class="slide-text">
+              Auditar, sanitizar y reconstruir descripciones de trabajo (Job Descriptions) utilizando Inteligencia Artificial.
+            </p>
+          </div>
+
+          <!-- Enfoque -->
+          <div class="metric-card border-l-4 border-l-[#03B9D4] flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-xl bg-[#03B9D4]/10 border border-[#03B9D4]/20 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-scale-balanced text-[#03B9D4] text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-[#0f172a]">Enfoque</h3>
+            </div>
+            <p class="slide-text">
+              Employer Branding y Auditoría Legal.
+            </p>
+          </div>
+
+          <!-- Objetivo del negocio -->
+          <div class="metric-card border-l-4 border-l-[#EE7825] flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-xl bg-[#EE7825]/10 border border-[#EE7825]/20 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-bullseye text-[#EE7825] text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-[#0f172a]">Objetivo del negocio</h3>
+            </div>
+            <p class="slide-text">
+              Prevenir fugas de confidencialidad, eliminar sesgos/discriminación y garantizar un estándar corporativo (inglés profesional) en todas las publicaciones de vacantes de Solvo.
+            </p>
+          </div>
+
+          <!-- Arquitectura -->
+          <div class="metric-card border-l-4 border-l-[#EEA157] flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-xl bg-[#EEA157]/15 border border-[#EEA157]/30 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-layer-group text-[#EE7825] text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-[#0f172a]">Arquitectura</h3>
+            </div>
+            <p class="slide-text">
+              Creado bajo arquitectura limpia en .NET (C#) con integración directa a Azure OpenAI (gpt-4o o modelos similares de nueva generación).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12 (AVVA Slide 2): Flujo de Trabajo (Workflow) -->
+    <div class="slide-container" id="slide12">
+      <div class="slide-content relative">
+        <h2 class="slide-title">
+          <i class="fa-solid fa-diagram-project text-[#007685]"></i>
+          Flujo de Trabajo de AVVA
+        </h2>
+
+        <div class="space-y-3 mt-1 flex-grow flex flex-col justify-center">
+          <!-- Step 1 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#007685] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(0,118,133,0.15)] text-[#007685] font-bold">
+              1
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#007685]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Recepción (Input)</h4>
+              <p class="text-[#475569] text-sm">El sistema recibe un lote (batch) de vacantes crudas desde la plataforma de reclutamiento.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#03B9D4] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(3,185,212,0.15)] text-[#03B9D4] font-bold">
+              2
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#03B9D4]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Orquestación (Backend)</h4>
+              <p class="text-[#475569] text-sm">El JobQualificationService en .NET itera sobre las vacantes y contacta asíncronamente a Azure OpenAI.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#EE7825] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(238,120,37,0.15)] text-[#EE7825] font-bold">
+              3
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#EE7825]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Auditoría IA</h4>
+              <p class="text-[#475569] text-sm">El Master Prompt de AVVA analiza el texto original, asigna una calificación (Score), clasifica su gravedad, emite un feedback y reconstruye el texto completo.</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#EEA157] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(238,161,87,0.15)] text-[#EE7825] font-bold">
+              4
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#EEA157]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Almacenamiento</h4>
+              <p class="text-[#475569] text-sm">Los resultados (tanto el texto original como el procesado) se guardan en la base de datos PostgreSQL (AvvaEvaluationResult) para trazabilidad.</p>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#007685] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(0,118,133,0.15)] text-[#007685] font-bold">
+              5
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#007685]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Respuesta (Output)</h4>
+              <p class="text-[#475569] text-sm">El sistema devuelve un objeto estructurado (JSON) que certifica que la vacante está lista para publicarse (approved: YES).</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="avva_workflow.html" target="_blank" class="presenter-note"
+          title="Abrir flujo interactivo de AVVA en pestaña nueva">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>Ver Diagrama de Flujo AVVA</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-75"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide 13 (AVVA Slide 3): Estructura de Entrada (Input) -->
+    <div class="slide-container" id="slide13">
+      <div class="slide-content">
+        <h2 class="slide-title">
+          <i class="fa-solid fa-right-to-bracket text-[#007685]"></i>
+          Interfaz de Entrada (Input Data)
+        </h2>
+
+        <div class="grid grid-cols-12 gap-8 h-full items-center">
+          <!-- Left Column -->
+          <div class="col-span-5 flex flex-col justify-center">
+            <p class="slide-text mb-6">
+              El sistema procesa peticiones estructuradas en JSON.
+            </p>
+
+            <div class="metric-card border-l-4 border-l-[#007685] mb-6">
+              <h3 class="text-xl font-bold text-[#0f172a] mb-2">Esquema de Entrada</h3>
+              <p class="text-[#007685] font-semibold text-lg font-mono">EvaluationRequest</p>
+            </div>
+
+            <div class="metric-card border-l-4 border-l-[#EE7825] bg-[#EE7825]/5">
+              <p class="text-[#0f172a] text-sm leading-relaxed">
+                <strong class="text-[#EE7825]">Nota:</strong> El texto crudo es inyectado dinámicamente al sistema de Azure OpenAI como un <code class="bg-white px-2 py-0.5 rounded text-[#007685] font-semibold border border-slate-200">ChatRequestUserMessage</code>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Right Column: Code Window -->
+          <div class="col-span-7">
+            <div class="code-card">
+              <div class="code-card-header">
+                <div class="code-dots">
+                  <div class="code-dot" style="background:#EE7825;"></div>
+                  <div class="code-dot" style="background:#EEA157;"></div>
+                  <div class="code-dot" style="background:#03B9D4;"></div>
+                </div>
+                <span class="text-xs text-slate-400 font-mono">EvaluationRequest.json</span>
+              </div>
+              <pre class="code-card-body"><code><span class="tok-punct">{</span>
+  <span class="tok-key">"batchId"</span><span class="tok-punct">:</span> <span class="tok-str">"string"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"vacancies"</span><span class="tok-punct">:</span> <span class="tok-punct">[</span>
+    <span class="tok-punct">{</span>
+      <span class="tok-key">"vacancyId"</span><span class="tok-punct">:</span> <span class="tok-str">"string"</span><span class="tok-punct">,</span>
+      <span class="tok-key">"originalJd"</span><span class="tok-punct">:</span> <span class="tok-str">"string (Texto crudo de la vacante)"</span>
+    <span class="tok-punct">}</span>
+  <span class="tok-punct">]</span>
+<span class="tok-punct">}</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 14 (AVVA Slide 4): Estructura de Salida (Output) -->
+    <div class="slide-container" id="slide14">
+      <div class="slide-content">
+        <h2 class="slide-title">
+          <i class="fa-solid fa-right-from-bracket text-[#007685]"></i>
+          Interfaz de Salida (Output Data)
+        </h2>
+
+        <div class="grid grid-cols-12 gap-8 h-full items-center">
+          <!-- Left Column -->
+          <div class="col-span-5 flex flex-col justify-center">
+            <p class="slide-text mb-6">
+              El agente devuelve una respuesta estructurada garantizada mediante <code class="bg-[#007685]/10 text-[#007685] px-2 py-0.5 rounded font-mono text-sm font-semibold">ChatCompletionsResponseFormat.JsonObject</code>.
+            </p>
+
+            <div class="metric-card border-l-4 border-l-[#03B9D4]">
+              <h3 class="text-xl font-bold text-[#0f172a] mb-2">Esquema de Salida</h3>
+              <p class="text-[#03B9D4] font-semibold text-lg font-mono">EvaluationDataDto</p>
+            </div>
+          </div>
+
+          <!-- Right Column: Code Window -->
+          <div class="col-span-7">
+            <div class="code-card">
+              <div class="code-card-header">
+                <div class="code-dots">
+                  <div class="code-dot" style="background:#EE7825;"></div>
+                  <div class="code-dot" style="background:#EEA157;"></div>
+                  <div class="code-dot" style="background:#03B9D4;"></div>
+                </div>
+                <span class="text-xs text-slate-400 font-mono">EvaluationDataDto.json</span>
+              </div>
+              <pre class="code-card-body"><code><span class="tok-punct">{</span>
+  <span class="tok-key">"score"</span><span class="tok-punct">:</span> <span class="tok-num">100</span><span class="tok-punct">,</span>
+  <span class="tok-key">"approved"</span><span class="tok-punct">:</span> <span class="tok-str">"YES"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"status_category"</span><span class="tok-punct">:</span> <span class="tok-str">"TERRIBLE | MEDIOCRE | PERFECTA"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"feedback"</span><span class="tok-punct">:</span> <span class="tok-str">"Reporte corto de problemas encontrados..."</span><span class="tok-punct">,</span>
+  <span class="tok-key">"rewritten_jd"</span><span class="tok-punct">:</span> <span class="tok-str">"**Job Title**&lt;br&gt;&lt;br&gt;... (Texto sanitizado)"</span>
+<span class="tok-punct">}</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 15 (AVVA Slide 5): Reglas de Negocio (Business Rules) -->
+    <div class="slide-container" id="slide15">
+      <div class="slide-content">
+        <h2 class="slide-title" style="color: #EE7825; border-color: rgba(238, 120, 37, 0.2);">
+          <i class="fa-solid fa-gavel text-[#EE7825]"></i>
+          Reglas de Negocio Estrictas
+        </h2>
+
+        <div class="flex flex-col gap-4 mt-1 flex-grow justify-center">
+          <!-- Hero Rule -->
+          <div class="metric-card border-l-4 border-l-[#007685] bg-gradient-to-r from-white via-teal-50/20 to-white py-4 px-6">
+            <h3 class="text-lg font-bold text-[#007685] mb-1 flex items-center gap-2">
+              <i class="fa-solid fa-circle-check text-[#007685]"></i> Regla de Aprobación Continua
+            </h3>
+            <p class="slide-text text-base">
+              AVVA siempre aprueba la vacante (approved: YES) porque la IA asume la responsabilidad de repararla automáticamente, eliminando los cuellos de botella humanos.
+            </p>
+          </div>
+
+          <!-- 2x2 Grid -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Anti-Confidencialidad -->
+            <div class="metric-card border-l-4 border-l-[#EE7825] py-3 px-5">
+              <h4 class="text-base font-bold text-[#0f172a] mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-user-secret text-[#EE7825]"></i> Regla Anti-Confidencialidad
+              </h4>
+              <p class="text-[#475569] text-sm">Prohibido exponer nombres del cliente final, URLs, correos o logos.</p>
+            </div>
+
+            <!-- Anti-Discriminación -->
+            <div class="metric-card border-l-4 border-l-[#EE7825] py-3 px-5">
+              <h4 class="text-base font-bold text-[#0f172a] mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-ban text-[#EE7825]"></i> Regla Anti-Discriminación
+              </h4>
+              <p class="text-[#475569] text-sm">Eliminación estricta de filtros por edad, género, apariencia, estado civil, nacionalidad, religión y orientación sexual.</p>
+            </div>
+
+            <!-- Salarial -->
+            <div class="metric-card border-l-4 border-l-[#EEA157] py-3 px-5">
+              <h4 class="text-base font-bold text-[#0f172a] mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice-dollar text-[#EE7825]"></i> Regla Salarial
+              </h4>
+              <p class="text-[#475569] text-sm">Siempre se debe eliminar cualquier mención de salarios o datos financieros del cliente.</p>
+            </div>
+
+            <!-- Formato -->
+            <div class="metric-card border-l-4 border-l-[#03B9D4] py-3 px-5">
+              <h4 class="text-base font-bold text-[#0f172a] mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-language text-[#03B9D4]"></i> Regla de Formato
+              </h4>
+              <p class="text-[#475569] text-sm">La vacante final se entrega obligatoriamente en inglés, bajo una estructura de etiquetas de formato y con los "Solvo Benefits" añadidos por defecto.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 16 (AVVA Slide 6): Sistema de Scoring (Puntuación) -->
+    <div class="slide-container" id="slide16">
+      <div class="slide-content">
+        <h2 class="slide-title">
+          <i class="fa-solid fa-chart-line text-[#007685]"></i>
+          Algoritmo de Calificación (Scoring)
+        </h2>
+
+        <div class="grid grid-cols-12 gap-8 h-full items-center">
+          <!-- Left Column: Baseline -->
+          <div class="col-span-5 flex flex-col justify-center">
+            <div class="metric-card border-t-4 border-t-[#007685] p-6 text-center">
+              <div class="text-[#007685] font-bold text-6xl font-['Space_Grotesk'] mb-2">
+                100
+              </div>
+              <p class="text-xs uppercase tracking-wider font-bold text-[#64748b] mb-4">Puntaje Base Inicial</p>
+              <p class="slide-text text-base mb-6">
+                La vacante comienza con 100 puntos. Se aplican deducciones severas por infracciones:
+              </p>
+
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-[#0f172a] font-medium">
+                <strong class="text-[#007685]">Límite inferior:</strong> El puntaje nunca puede ser negativo (min 0).
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Deductions -->
+          <div class="col-span-7 space-y-3">
+            <!-- -60 -->
+            <div class="metric-card border-l-4 border-l-[#EE7825] flex items-center justify-between py-3 px-5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#EE7825]/10 flex items-center justify-center shrink-0">
+                  <i class="fa-solid fa-scale-unbalanced text-[#EE7825]"></i>
+                </div>
+                <p class="text-[#0f172a] font-medium text-sm">Discriminación, sesgos o requisitos ilegales.</p>
+              </div>
+              <span class="text-[#EE7825] font-bold text-lg font-mono bg-[#EE7825]/10 px-3 py-1 rounded shrink-0">-60 puntos</span>
+            </div>
+
+            <!-- -40 -->
+            <div class="metric-card border-l-4 border-l-[#EE7825] flex items-center justify-between py-3 px-5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#EE7825]/10 flex items-center justify-center shrink-0">
+                  <i class="fa-solid fa-shield-virus text-[#EE7825]"></i>
+                </div>
+                <p class="text-[#0f172a] font-medium text-sm">Fugas de confidencialidad (nombres, marcas).</p>
+              </div>
+              <span class="text-[#EE7825] font-bold text-lg font-mono bg-[#EE7825]/10 px-3 py-1 rounded shrink-0">-40 puntos</span>
+            </div>
+
+            <!-- -20 -->
+            <div class="metric-card border-l-4 border-l-[#EEA157] flex items-center justify-between py-3 px-5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#EEA157]/15 flex items-center justify-center shrink-0">
+                  <i class="fa-solid fa-money-bill-transfer text-[#EE7825]"></i>
+                </div>
+                <p class="text-[#0f172a] font-medium text-sm">Mención de salarios o datos financieros.</p>
+              </div>
+              <span class="text-[#EE7825] font-bold text-lg font-mono bg-[#EEA157]/20 px-3 py-1 rounded shrink-0">-20 puntos</span>
+            </div>
+
+            <!-- -15 -->
+            <div class="metric-card border-l-4 border-l-[#007685] flex items-center justify-between py-3 px-5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#007685]/10 flex items-center justify-center shrink-0">
+                  <i class="fa-solid fa-align-left text-[#007685]"></i>
+                </div>
+                <p class="text-[#0f172a] font-medium text-sm">Texto plano sin estructura (sin viñetas).</p>
+              </div>
+              <span class="text-[#007685] font-bold text-lg font-mono bg-[#007685]/10 px-3 py-1 rounded shrink-0">-15 puntos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 17 (AVVA Slide 7): El Master Prompt (El Cerebro) -->
+    <div class="slide-container" id="slide17">
+      <div class="slide-content">
+        <h2 class="slide-title">
+          <i class="fa-solid fa-brain text-[#007685]"></i>
+          El "Master Prompt" del Agente
+        </h2>
+
+        <div class="grid grid-cols-12 gap-6 h-full items-start mt-2">
+          <!-- Left Column: Role & Core Prompt Snippet -->
+          <div class="col-span-6 flex flex-col gap-4">
+            <div class="metric-card border-l-4 border-l-[#007685] py-3 px-5">
+              <span class="text-xs uppercase tracking-wider font-bold text-[#64748b]">Rol</span>
+              <h3 class="text-lg font-bold text-[#007685] mt-0.5">EXPERTO EN EMPLOYER BRANDING Y AUDITOR LEGAL.</h3>
+            </div>
+
+            <div class="code-card">
+              <div class="code-card-header">
+                <span class="text-xs text-cyan-300 font-semibold flex items-center gap-2">
+                  <i class="fa-solid fa-microchip"></i> Core Prompt Snippet (Sistema Azure OpenAI)
+                </span>
+                <span class="text-xs text-slate-400 font-mono">SystemPrompt</span>
+              </div>
+              <div class="code-card-body text-xs leading-relaxed text-slate-200">
+                <p class="italic text-[#EEA157]">
+                  "REGLAS FATALES (ELIMINAR): 1. CONFIDENCIALIDAD: Elimina nombres del cliente final, URLs, correos o logos. 2. DISCRIMINACION: Elimina edades, género, apariencia... ANTI-ALUCINACION (CRITICO): NUNCA inventes información... TRADUCCION OBLIGATORIA AL INGLÉS: Absolutamente TODO el contenido generado debe estar en INGLÉS."
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Output structure -->
+          <div class="col-span-6 flex flex-col justify-center">
+            <div class="metric-card border-t-4 border-t-[#03B9D4] p-5">
+              <h3 class="text-lg font-bold text-[#0f172a] mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-[#03B9D4]"></i> Estructura del Output exigida en el Prompt:
+              </h3>
+
+              <div class="space-y-2">
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg">
+                  <code class="text-[#007685] font-bold font-mono text-sm">score</code>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg">
+                  <code class="text-[#03B9D4] font-bold font-mono text-sm">approved</code>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg">
+                  <code class="text-[#EE7825] font-bold font-mono text-sm">status_category</code>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg">
+                  <code class="text-[#EEA157] font-bold font-mono text-sm">feedback</code>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                  <div class="flex items-center gap-2 mb-2">
+                    <code class="text-[#007685] font-bold font-mono text-sm">rewritten_jd</code>
+                    <span class="text-xs text-[#64748b]">(Con estructura inyectada:</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5 pl-2">
+                    <span class="px-2 py-0.5 rounded text-xs font-semibold bg-[#007685]/10 text-[#007685]">Hook</span>
+                    <span class="px-2 py-0.5 rounded text-xs font-semibold bg-[#03B9D4]/10 text-[#03B9D4]">Responsibilities</span>
+                    <span class="px-2 py-0.5 rounded text-xs font-semibold bg-[#EE7825]/10 text-[#EE7825]">Benefits</span>
+                    <span class="px-2 py-0.5 rounded text-xs font-semibold bg-[#EEA157]/20 text-[#EE7825]">Mandatory Requirements</span>
+                    <span class="px-2 py-0.5 rounded text-xs font-semibold bg-slate-200 text-[#0f172a]">About the Project</span>
+                  </div>
+                  <span class="text-xs text-[#64748b] mt-1 block">)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- End .deck-wrapper -->
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    const totalSlides = slides.length;
+
+    document.getElementById('totalSlidesNum').textContent = totalSlides;
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      document.getElementById('currentSlideNum').textContent = currentSlide + 1;
+      document.getElementById('prevBtn').disabled = currentSlide === 0;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+      // Update Top Deck Progress Bar
+      const progressPct = ((currentSlide + 1) / totalSlides) * 100;
+      const progressBar = document.getElementById('slideProgressBar');
+      if (progressBar) {
+        progressBar.style.width = progressPct + '%';
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlides();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlides();
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+      }
+    });
+
+    // Initialize
+    updateSlides();
+  </script>
+
+  <!-- Navigation Controls -->
+  <div class="presentation-nav">
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()" title="Anterior (Flecha Izquierda)">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <div class="slide-indicator">
+      <span id="currentSlideNum">1</span> / <span id="totalSlidesNum">17</span>
+    </div>
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()" title="Siguiente (Flecha Derecha o Espacio)">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+
+</body>
+
+</html>
