@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabla de Ratios de Candidatos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      padding: 3rem;
+      color: #333333;
+    }
+    .table-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Colors mimicking the original image exactly */
+    .bg-bajo { background-color: #e8f4ec; color: #40886a; }
+    .text-bajo { color: #377d61; }
+    
+    .bg-medio { background-color: #d7efe6; color: #237b5a; }
+    .text-medio { color: #1e7050; }
+    
+    .bg-normal { background-color: #e6f0fc; color: #2d73b5; }
+    .text-normal { color: #2264a3; }
+    
+    .bg-alto { background-color: #faeed7; color: #ad7c32; }
+    .text-alto { color: #9c6c24; }
+    
+    .bg-muy-alto { background-color: #fbdea9; color: #b57a1d; }
+    .text-muy-alto { color: #a36911; }
+    
+    .bg-critico { background-color: #fcedee; color: #bc4250; }
+    .text-critico { color: #a6323f; }
+    
+    table {
+      border-spacing: 8px;
+      border-collapse: separate;
+      width: 100%;
+    }
+    th {
+      background-color: #faf9f6;
+      color: #4a5568;
+      font-weight: 600;
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    td {
+      border-radius: 6px;
+      padding: 16px 12px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .row-header {
+      background-color: transparent;
+      text-align: left;
+      font-weight: 600;
+      color: #4a5568;
+      padding-left: 10px;
+      font-size: 15px;
+    }
+    .val-main {
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+    .val-sub {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+    .legend-box {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      margin-right: 6px;
+      border-radius: 3px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="table-container">
+    <div class="mb-6 border-b border-slate-100 pb-4">
+      <h1 class="text-3xl font-bold text-slate-800 mb-2">Tabla de Ratios (Vertical x Seniority)</h1>
+      <p class="text-sm text-slate-500 italic">Mediana de submittals / HC por celda. Solo celdas con n≥5 registros. Color = nivel de exigencia relativo. Celdas grises = sin datos suficientes.</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="background-color: #faf9f6; width: 20%;"></th>
+          <th style="width: 20%;">Hyper Junior</th>
+          <th style="width: 20%;">Junior</th>
+          <th style="width: 20%;">Mid Senior</th>
+          <th style="width: 20%;">Senior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Administrative -->
+        <tr>
+          <td class="row-header">Administrative</td>
+          <td class="bg-medio"><div class="val-main text-medio">4.9x</div><div class="val-sub text-medio">med 4x &middot; n=64</div></td>
+          <td class="bg-bajo"><div class="val-main text-bajo">3.9x</div><div class="val-sub text-bajo">med 3x &middot; n=15</div></td>
+          <td class="bg-alto"><div class="val-main text-alto">6.2x</div><div class="val-sub text-alto">med 5x &middot; n=39</div></td>
+          <td class="bg-normal"><div class="val-main text-normal">5.1x</div><div class="val-sub text-normal">med 4.5x &middot; n=8</div></td>
+        </tr>
+        <!-- Customer Service -->
+        <tr>
+          <td class="row-header">Customer Service</td>
+          <td class="bg-alto"><div class="val-main text-alto">6.8x</div><div class="val-sub text-alto">med 5x &middot; n=21</div></td>
+          <td class="bg-medio"><div class="val-main text-medio">4.5x</div><div class="val-sub text-medio">med 4.35x &middot; n=20</div></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+        </tr>
+        <!-- Financial -->
+        <tr>
+          <td class="row-header">Financial</td>
+          <td class="bg-medio"><div class="val-main text-medio">4.6x</div><div class="val-sub text-medio">med 3.53x &middot; n=91</div></td>
+          <td class="bg-bajo"><div class="val-main text-bajo">3.7x</div><div class="val-sub text-bajo">med 3x &middot; n=19</div></td>
+          <td class="bg-alto"><div class="val-main text-alto">6.2x</div><div class="val-sub text-alto">med 5x &middot; n=32</div></td>
+          <td class="bg-critico"><div class="val-main text-critico">8.2x</div><div class="val-sub text-critico">med 7x &middot; n=25</div></td>
+        </tr>
+        <!-- Health Care -->
+        <tr>
+          <td class="row-header">Health Care</td>
+          <td class="bg-critico"><div class="val-main text-critico">9.5x</div><div class="val-sub text-critico">med 7x &middot; n=8</div></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+          <td class="bg-bajo"><div class="val-main text-bajo">3.2x</div><div class="val-sub text-bajo">med 3x &middot; n=5</div></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+        </tr>
+        <!-- Legal -->
+        <tr>
+          <td class="row-header">Legal</td>
+          <td class="bg-alto"><div class="val-main text-alto">6.1x</div><div class="val-sub text-alto">med 5x &middot; n=73</div></td>
+          <td class="bg-medio"><div class="val-main text-medio">4.4x</div><div class="val-sub text-medio">med 4x &middot; n=31</div></td>
+          <td class="bg-alto"><div class="val-main text-alto">6.7x</div><div class="val-sub text-alto">med 6.25x &middot; n=30</div></td>
+          <td class="bg-critico"><div class="val-main text-critico">9.2x</div><div class="val-sub text-critico">med 8x &middot; n=9</div></td>
+        </tr>
+        <!-- Marketing -->
+        <tr>
+          <td class="row-header">Marketing</td>
+          <td class="bg-alto"><div class="val-main text-alto">6.9x</div><div class="val-sub text-alto">med 5x &middot; n=16</div></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+          <td class="bg-critico"><div class="val-main text-critico">8.3x</div><div class="val-sub text-critico">med 6.5x &middot; n=14</div></td>
+          <td class="bg-normal"><div class="val-main text-normal">5.3x</div><div class="val-sub text-normal">med 5x &middot; n=9</div></td>
+        </tr>
+        <!-- Recruitment -->
+        <tr>
+          <td class="row-header">Recruitment</td>
+          <td class="bg-normal"><div class="val-main text-normal">5.5x</div><div class="val-sub text-normal">med 5x &middot; n=25</div></td>
+          <td class="bg-critico"><div class="val-main text-critico">9.1x</div><div class="val-sub text-critico">med 5x &middot; n=9</div></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+          <td class="bg-critico"><div class="val-main text-critico">10.0x</div><div class="val-sub text-critico">med 8x &middot; n=12</div></td>
+        </tr>
+        <!-- Sales -->
+        <tr>
+          <td class="row-header">Sales</td>
+          <td class="bg-medio"><div class="val-main text-medio">4.9x</div><div class="val-sub text-medio">med 4x &middot; n=39</div></td>
+          <td class="bg-medio"><div class="val-main text-medio">4.3x</div><div class="val-sub text-medio">med 4x &middot; n=16</div></td>
+          <td class="bg-medio"><div class="val-main text-medio">4.1x</div><div class="val-sub text-medio">med 4x &middot; n=16</div></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+        </tr>
+        <!-- Schedulers -->
+        <tr>
+          <td class="row-header">Schedulers</td>
+          <td class="bg-alto"><div class="val-main text-alto">6.2x</div><div class="val-sub text-alto">med 6x &middot; n=25</div></td>
+          <td class="bg-normal"><div class="val-main text-normal">5.0x</div><div class="val-sub text-normal">med 5x &middot; n=13</div></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+          <td><span class="text-slate-300">&mdash;</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Legend -->
+    <div class="mt-8 flex items-center justify-center gap-6 text-sm text-slate-700 font-medium pb-10">
+      <div class="flex items-center"><div class="legend-box bg-bajo"></div> <4x bajo</div>
+      <div class="flex items-center"><div class="legend-box bg-medio"></div> 4-5x medio</div>
+      <div class="flex items-center"><div class="legend-box bg-normal"></div> 5-6x normal</div>
+      <div class="flex items-center"><div class="legend-box bg-alto"></div> 6-7x alto</div>
+      <div class="flex items-center"><div class="legend-box bg-muy-alto"></div> 7-8x muy alto</div>
+      <div class="flex items-center"><div class="legend-box bg-critico"></div> >8x crítico</div>
+    </div>
+  </div>
+</body>
+</html>
