@@ -44,12 +44,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 1.5rem;
       font-family: 'Inter', sans-serif;
       margin: 0;
       min-height: 100vh;
-      overflow: hidden;
+      overflow: auto;
     }
 
     /* Deck Frame Wrapper */
@@ -63,6 +63,7 @@
       border: 1px solid #e2e8f0;
       flex-shrink: 0;
       background-color: #ffffff;
+      margin: auto;
     }
 
     /* Top deck real-time progress indicator */
@@ -1557,10 +1558,9 @@
       }
     });
 
-    // Responsive scaling
+    // Responsive scaling with scroll fallback for small screens
     function handleResize() {
       const deck = document.querySelector('.deck-wrapper');
-      // Available width/height minus padding and navigation bar
       const availableWidth = window.innerWidth - 48;
       const availableHeight = window.innerHeight - 100;
       
@@ -1572,8 +1572,15 @@
         availableHeight / targetHeight
       );
       
-      // Scale down if window is smaller than presentation, otherwise keep at 1
-      deck.style.transform = `scale(${Math.min(scale, 1)})`;
+      // On mobile screens, limit how small it gets to keep text readable
+      // This will cause the container to overflow, and body { overflow: auto } will show scrollbars
+      const isMobile = window.innerWidth <= 768;
+      const finalScale = isMobile ? Math.max(scale, 0.65) : Math.min(scale, 1);
+      
+      // Use zoom instead of transform so the physical layout box scales too,
+      // which allows native scrollbars to work perfectly without clipping
+      deck.style.zoom = finalScale;
+      deck.style.transform = 'none';
     }
 
     window.addEventListener('resize', handleResize);
