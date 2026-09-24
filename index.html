@@ -997,7 +997,6 @@
           <span class="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#007685]/10 text-[#007685] border border-[#007685]/20">
             AVVA (Automatic Vacancy Validation Agent) - Project Overview
           </span>
-          <span class="text-xs text-[#64748b] font-medium">Documento estructurado para generación automática de diapositivas (Slide-deck AI generator)</span>
         </div>
 
         <h2 class="slide-title">
@@ -1058,102 +1057,6 @@
             </p>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Slide 12 (AVVA Slide 2): Flujo de Trabajo (Workflow) -->
-    <div class="slide-container" id="slide12">
-      <div class="slide-content relative">
-        <h2 class="slide-title">
-          <i class="fa-solid fa-diagram-project text-[#007685]"></i>
-          Flujo de Trabajo de AVVA
-        </h2>
-
-        <div class="space-y-3 mt-1 flex-grow flex flex-col justify-center">
-          <!-- Step 1 -->
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#007685] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(0,118,133,0.15)] text-[#007685] font-bold">
-              1
-            </div>
-            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#007685]">
-              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Recepción (Input)</h4>
-              <p class="text-[#475569] text-sm">El sistema recibe un lote (batch) de vacantes crudas desde la plataforma de reclutamiento.</p>
-            </div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#03B9D4] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(3,185,212,0.15)] text-[#03B9D4] font-bold">
-              2
-            </div>
-            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#03B9D4]">
-              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Orquestación (Backend)</h4>
-              <p class="text-[#475569] text-sm">El JobQualificationService en .NET itera sobre las vacantes y contacta asíncronamente a Azure OpenAI.</p>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#EE7825] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(238,120,37,0.15)] text-[#EE7825] font-bold">
-              3
-            </div>
-            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#EE7825]">
-              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Auditoría IA</h4>
-              <p class="text-[#475569] text-sm">El Master Prompt de AVVA analiza el texto original, asigna una calificación (Score), clasifica su gravedad, emite un feedback y reconstruye el texto completo.</p>
-            </div>
-          </div>
-
-          <!-- Step 4 -->
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#EEA157] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(238,161,87,0.15)] text-[#EE7825] font-bold">
-              4
-            </div>
-            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#EEA157]">
-              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Almacenamiento</h4>
-              <p class="text-[#475569] text-sm">Los resultados (tanto el texto original como el procesado) se guardan en la base de datos PostgreSQL (AvvaEvaluationResult) para trazabilidad.</p>
-            </div>
-          </div>
-
-          <!-- Step 5 -->
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#007685] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(0,118,133,0.15)] text-[#007685] font-bold">
-              5
-            </div>
-            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#007685]">
-              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Respuesta (Output)</h4>
-              <p class="text-[#475569] text-sm">El sistema devuelve un objeto estructurado (JSON) que certifica que la vacante está lista para publicarse (approved: YES).</p>
-            </div>
-          </div>
-        </div>
-
-        <a href="avva_workflow.html" target="_blank" class="presenter-note"
-          title="Abrir flujo interactivo de AVVA en pestaña nueva">
-          <i class="fa-solid fa-diagram-project"></i>
-          <span>Ver Diagrama de Flujo AVVA</span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-75"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Slide 13 (New): Notificación por Correo -->
-    <div class="slide-container" id="slide13">
-      <div class="slide-content flex flex-col justify-center items-center text-center h-full">
-        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-[#EE7825] to-[#EEA157] flex items-center justify-center mb-6 shadow-[0_10px_25px_rgba(238,120,37,0.25)]">
-          <i class="fa-solid fa-envelope-circle-check text-4xl text-white"></i>
-        </div>
-        
-        <h2 class="text-4xl font-['Space_Grotesk'] font-bold text-[#0f172a] mb-4">
-          Notificación Automática
-        </h2>
-        
-        <p class="text-xl text-[#475569] mb-10 max-w-2xl leading-relaxed">
-          Una vez la vacante es auditada y optimizada, el sistema notifica automáticamente a los stakeholders con el resultado y la versión final mejorada.
-        </p>
-
-        <a href="avva_email_preview%205.html" target="_blank" class="metric-card border-t-4 border-t-[#007685] px-10 py-5 cursor-pointer bg-white inline-flex items-center gap-4 hover:scale-105 transition-transform text-decoration-none" style="text-decoration: none;">
-          <i class="fa-solid fa-envelope-open-text text-3xl text-[#007685]"></i>
-          <span class="text-[#0f172a] font-bold text-2xl">Ver Plantilla del Correo</span>
-        </a>
       </div>
     </div>
 
@@ -1287,6 +1190,102 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Slide 12 (AVVA Slide 2): Flujo de Trabajo (Workflow) -->
+    <div class="slide-container" id="slide12">
+      <div class="slide-content relative">
+        <h2 class="slide-title">
+          <i class="fa-solid fa-diagram-project text-[#007685]"></i>
+          Flujo de Trabajo de AVVA
+        </h2>
+
+        <div class="space-y-3 mt-1 flex-grow flex flex-col justify-center">
+          <!-- Step 1 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#007685] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(0,118,133,0.15)] text-[#007685] font-bold">
+              1
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#007685]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Recepción (Input)</h4>
+              <p class="text-[#475569] text-sm">El sistema recibe un lote (batch) de vacantes crudas desde la plataforma de reclutamiento.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#03B9D4] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(3,185,212,0.15)] text-[#03B9D4] font-bold">
+              2
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#03B9D4]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Orquestación (Backend)</h4>
+              <p class="text-[#475569] text-sm">El JobQualificationService en .NET itera sobre las vacantes y contacta asíncronamente a Azure OpenAI.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#EE7825] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(238,120,37,0.15)] text-[#EE7825] font-bold">
+              3
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#EE7825]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Auditoría IA</h4>
+              <p class="text-[#475569] text-sm">El Master Prompt de AVVA analiza el texto original, asigna una calificación (Score), clasifica su gravedad, emite un feedback y reconstruye el texto completo.</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#EEA157] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(238,161,87,0.15)] text-[#EE7825] font-bold">
+              4
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#EEA157]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Almacenamiento</h4>
+              <p class="text-[#475569] text-sm">Los resultados (tanto el texto original como el procesado) se guardan en la base de datos PostgreSQL (AvvaEvaluationResult) para trazabilidad.</p>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-white border-2 border-[#007685] flex items-center justify-center flex-shrink-0 z-10 shadow-[0_3px_10px_rgba(0,118,133,0.15)] text-[#007685] font-bold">
+              5
+            </div>
+            <div class="metric-card flex-grow py-3 px-5 border-l-4 border-l-[#007685]">
+              <h4 class="text-[#0f172a] font-bold text-base mb-0.5">Respuesta (Output)</h4>
+              <p class="text-[#475569] text-sm">El sistema devuelve un objeto estructurado (JSON) que certifica que la vacante está lista para publicarse (approved: YES).</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="avva_workflow.html" target="_blank" class="presenter-note"
+          title="Abrir flujo interactivo de AVVA en pestaña nueva">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>Ver Diagrama de Flujo AVVA</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-75"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide 13 (New): Notificación por Correo -->
+    <div class="slide-container" id="slide13">
+      <div class="slide-content flex flex-col justify-center items-center text-center h-full">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-[#EE7825] to-[#EEA157] flex items-center justify-center mb-6 shadow-[0_10px_25px_rgba(238,120,37,0.25)]">
+          <i class="fa-solid fa-envelope-circle-check text-4xl text-white"></i>
+        </div>
+        
+        <h2 class="text-4xl font-['Space_Grotesk'] font-bold text-[#0f172a] mb-4">
+          Notificación Automática
+        </h2>
+        
+        <p class="text-xl text-[#475569] mb-10 max-w-2xl leading-relaxed">
+          Una vez la vacante es auditada y optimizada, el sistema notifica automáticamente a los stakeholders con el resultado y la versión final mejorada.
+        </p>
+
+        <a href="avva_email_preview%205.html" target="_blank" class="metric-card border-t-4 border-t-[#007685] px-10 py-5 cursor-pointer bg-white inline-flex items-center gap-4 hover:scale-105 transition-transform text-decoration-none" style="text-decoration: none;">
+          <i class="fa-solid fa-envelope-open-text text-3xl text-[#007685]"></i>
+          <span class="text-[#0f172a] font-bold text-2xl">Ver Plantilla del Correo</span>
+        </a>
       </div>
     </div>
 
